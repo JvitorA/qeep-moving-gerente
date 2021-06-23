@@ -31,12 +31,14 @@ public class ClientePJ extends Cliente {
 		this.nomeFantasia = nomeFantasia;
 	}
 	
-	
-
 	public ClientePJ() {
 		super();
 	}
 
+	@Override
+	public String imprimeCliente() {
+		return String.format("%-5d %-3d %-20s %-14s %-20s", super.getNroConta(), super.getAgencia(), super.getTelefone(), this.cnpj, this.razaoSocial);
+	}
 
 
 	public String getCnpj() {
@@ -76,7 +78,5 @@ public class ClientePJ extends Cliente {
 		return "ClientePJ [cnpj=" + cnpj + ", nomeSocio=" + nomeSocio + ", razaoSocial=" + razaoSocial
 				+ ", nomeFantasia=" + nomeFantasia + ", saldo=" + super.getSaldo() + "]";
 	}
-	
-	
 	
 }

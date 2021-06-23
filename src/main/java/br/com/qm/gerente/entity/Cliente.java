@@ -35,7 +35,7 @@ public abstract class Cliente {
 		
 	}
 
-
+	public abstract String imprimeCliente();
 
 	public int getNroConta() {
 		return nroConta;

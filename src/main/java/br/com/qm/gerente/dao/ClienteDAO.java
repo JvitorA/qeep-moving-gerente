@@ -7,6 +7,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import br.com.qm.gerente.entity.Cliente;
+import br.com.qm.gerente.exception.GerenteException;
 
 public class ClienteDAO {
 
@@ -64,7 +65,7 @@ public class ClienteDAO {
 
 		float valorAlterado = clienteAlterado.getLimiteChequeEspecial() + valorAlteracao;
 
-		if (valorAlteracao > 0) {
+		if (valorAlterado > 0) {
 			clienteAlterado.setLimiteChequeEspecial(valorAlterado);
 		} else {
 			clienteAlterado.setLimiteChequeEspecial(0F);
@@ -77,11 +78,11 @@ public class ClienteDAO {
 		return true;
 	}
 
-	public boolean transfereValor(int nroContaOrigem, int nroContaDestino, float valorTransferido) {
+	public void transfereValor(int nroContaOrigem, int nroContaDestino, float valorTransferido) throws GerenteException {
 
 		if (valorTransferido <= 0) {
 			// Valor não pode ser negativo ou zero
-			return false;
+			throw new GerenteException("Valor transferido não pode ser negativo ou zero!");
 		}
 
 		Cliente clienteOrigem = entityManager.find(Cliente.class, nroContaOrigem);
@@ -89,12 +90,12 @@ public class ClienteDAO {
 
 		if (clienteOrigem == null || clienteDestino == null) {
 			// Um dos clientes não foi encontrado.
-			return false;
+			throw new GerenteException("Um dos clientes não existe na base de dados!");
 		}
 
 		if (clienteOrigem.getSaldo() < valorTransferido) {
 			// Cliente origem não tem saldo
-			return false;
+			throw new GerenteException("O cliente de origem não possui saldo suficiente!");
 		}
 
 		clienteOrigem.setSaldo(clienteOrigem.getSaldo() - valorTransferido);
@@ -105,19 +106,18 @@ public class ClienteDAO {
 		entityManager.merge(clienteDestino);
 		entityManager.getTransaction().commit();
 
-		return true;
 	}
 
-	public boolean adicionaSaldo(int nroConta, float valorAdicionado) {
+	public void adicionaSaldo(int nroConta, float valorAdicionado) throws GerenteException {
 
 		if (valorAdicionado <= 0) {
-			return false;
+			throw new GerenteException("Não é possível depositar valores negativos!");
 		}
 
 		Cliente cliente = entityManager.find(Cliente.class, nroConta);
 
 		if (cliente == null) {
-			return false;
+			throw new GerenteException("O cliente não foi encontrado na base de dados!");
 		}
 
 		cliente.setSaldo(cliente.getSaldo() + valorAdicionado);
@@ -126,7 +126,6 @@ public class ClienteDAO {
 		entityManager.merge(cliente);
 		entityManager.getTransaction().commit();
 
-		return true;
 	}
 
 	public List<Cliente> listaClientes() {

@@ -27,6 +27,10 @@ public class ClientePF extends Cliente {
 		super();
 	}
 
+	@Override
+	public String imprimeCliente() {
+		return String.format("%-5d %-3d %-20s %-14s %-20s", super.getNroConta(), super.getAgencia(), super.getTelefone(), this.cpf, this.nome);
+	}
 
 	public String getCpf() {
 		return cpf;
@@ -52,10 +56,10 @@ public class ClientePF extends Cliente {
 		this.idade = idade;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "ClientePF [cpf=" + cpf + ", nome=" + nome + ", idade=" + idade + ", saldo=" + super.getSaldo() + "]";
 	}
-	
-	
+
 }
